@@ -23,10 +23,24 @@ Quartile	Player ID	Score
 
 Solution 1 
 
-with ranked as ( select playerid,score,row_number() over(order by score desc) as row
-                from player),total as (select count(*)as total from player)
-                select (case when r.row>(t.total+1)/2 then 2 else 1 end) as quartile,r.playerid,r.score
-                from ranked r,total t
-				order by quartile,r.playerid
+```sql
+with ranked as ( 
+    select playerid,score,row_number() over(order by score desc) as row
+    from player),
+    total as (select count(*)as total from player)
+select (case when r.row>(t.total+1)/2 then 2 else 1 end) as quartile,r.playerid,r.score
+from ranked r,total t
+order by quartile,r.playerid
+```
+
+Solution 2
+
+```sql
+SELECT  NTILE(2) OVER (ORDER BY Score DESC) AS Quartile,
+        PlayerID,
+        Score
+FROM    Player a
+ORDER BY Score DESC;```
+
 
 
